@@ -21,9 +21,9 @@ Getting Started
    create column family counter_table with default_validation_class=CounterColumnType and replicate_on_write=true;
 
 3. Run YCSB command. 
-
-    ./bin/ycsb run cassandra-10 -s -P workloads/workloadcounter -p hosts="localhost"
-    ./bin/ycsb load cassandra-10 -s -P workloads/workloadcounter -p hosts="localhost"
+  
+   ./bin/ycsb run cassandra-10 -s -P workloads/workloadcounter -p hosts="localhost"  
+   ./bin/ycsb load cassandra-10 -s -P workloads/workloadcounter -p hosts="localhost"
 
    See https://github.com/brianfrankcooper/YCSB/wiki/Running-a-Workload
    for a detailed documentation on how to run a workload.
