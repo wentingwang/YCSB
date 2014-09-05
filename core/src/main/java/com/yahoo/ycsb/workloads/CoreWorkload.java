@@ -196,6 +196,16 @@ public class CoreWorkload extends Workload
 	/**
 	 * The default proportion of transactions that are scans.
 	 */
+	public static final String INCREASECOUNTER_PROPORTION_PROPERTY_DEFAULT="0.0";
+
+        /**
+	 * The name of the property for the proportion of transactions that are read-modify-write.
+	 */
+	public static final String INCREASECOUNTER_PROPORTION_PROPERTY="increasecounterproportion";
+	
+	/**
+	 * The default proportion of transactions that are scans.
+	 */
 	public static final String READMODIFYWRITE_PROPORTION_PROPERTY_DEFAULT="0.0";
 	
 	/**
@@ -313,6 +323,7 @@ public class CoreWorkload extends Workload
 		double insertproportion=Double.parseDouble(p.getProperty(INSERT_PROPORTION_PROPERTY,INSERT_PROPORTION_PROPERTY_DEFAULT));
 		double scanproportion=Double.parseDouble(p.getProperty(SCAN_PROPORTION_PROPERTY,SCAN_PROPORTION_PROPERTY_DEFAULT));
 		double readmodifywriteproportion=Double.parseDouble(p.getProperty(READMODIFYWRITE_PROPORTION_PROPERTY,READMODIFYWRITE_PROPORTION_PROPERTY_DEFAULT));
+                double increasecounterproportion=Double.parseDouble(p.getProperty(INCREASECOUNTER_PROPORTION_PROPERTY,INCREASECOUNTER_PROPORTION_PROPERTY_DEFAULT));
 		recordcount=Integer.parseInt(p.getProperty(Client.RECORD_COUNT_PROPERTY));
 		String requestdistrib=p.getProperty(REQUEST_DISTRIBUTION_PROPERTY,REQUEST_DISTRIBUTION_PROPERTY_DEFAULT);
 		int maxscanlength=Integer.parseInt(p.getProperty(MAX_SCAN_LENGTH_PROPERTY,MAX_SCAN_LENGTH_PROPERTY_DEFAULT));
@@ -344,6 +355,7 @@ public class CoreWorkload extends Workload
 		operationchooser=new DiscreteGenerator();
 		if (readproportion>0)
 		{
+                        System.out.println("Find Read");
 			operationchooser.addValue(readproportion,"READ");
 		}
 
@@ -365,6 +377,11 @@ public class CoreWorkload extends Workload
 		if (readmodifywriteproportion>0)
 		{
 			operationchooser.addValue(readmodifywriteproportion,"READMODIFYWRITE");
+		}
+                if (increasecounterproportion>0)
+		{
+                        System.out.println("Find IncreaseCounter");
+			operationchooser.addValue(increasecounterproportion,"INCREASECOUNTER");
 		}
 
 		transactioninsertkeysequence=new CounterGenerator(recordcount);
@@ -490,6 +507,10 @@ public class CoreWorkload extends Workload
 		{
 			doTransactionScan(db);
 		}
+                else if (op.compareTo("INCREASECOUNTER")==0)
+                {
+                        doTransactionIncreaseCounter(db);
+                }
 		else
 		{
 			doTransactionReadModifyWrite(db);
@@ -637,5 +658,15 @@ public class CoreWorkload extends Workload
 
 		HashMap<String, ByteIterator> values = buildValues();
 		db.insert(table,dbkey,values);
+	}
+        
+        public void doTransactionIncreaseCounter(DB db)
+	{
+		//choose the next key
+		int keynum=transactioninsertkeysequence.nextInt();
+
+		String dbkey = buildKeyName(keynum);
+
+		db.increaseCounter(table,dbkey);
 	}
 }

@@ -126,6 +126,16 @@ public abstract class DB
 	 */
 	public abstract int insert(String table, String key, HashMap<String,ByteIterator> values);
 
+        /**
+	 * Increase a counter in the cassandra. One by one
+	 *
+	 * @param table The name of the table
+	 * @param key The record key of the record to insert.
+	 * @return Zero on success, a non-zero error code on error.  See this class's description for a discussion of error codes.
+	 */
+
+        public abstract int increaseCounter(String table, String key);
+
 	/**
 	 * Delete a record from the database. 
 	 *

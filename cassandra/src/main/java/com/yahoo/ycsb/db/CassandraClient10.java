@@ -431,6 +431,7 @@ public class CassandraClient10 extends DB
    */
   public int insert(String table, String key, HashMap<String, ByteIterator> values)
   {
+
     if (!_table.equals(table)) {
       try
       {
@@ -480,6 +481,59 @@ public class CassandraClient10 extends DB
         mutationMap.clear();
         record.clear();
         
+        if (_debug)
+        {
+           System.out.println("ConsistencyLevel=" + writeConsistencyLevel.toString());
+        }
+
+        return Ok;
+      } catch (Exception e)
+      {
+        errorexception = e;
+      }
+      try
+      {
+        Thread.sleep(500);
+      } catch (InterruptedException e)
+      {
+      }
+    }
+
+    errorexception.printStackTrace();
+    errorexception.printStackTrace(System.out);
+    return Error;
+  }
+
+  public int increaseCounter(String table, String key)
+  {
+   if (!_table.equals(table)) {
+      try
+      {
+        client.set_keyspace(table);
+        _table = table;
+      }
+      catch (Exception e)
+      {
+        e.printStackTrace();
+        e.printStackTrace(System.out);
+        return Error;
+      }
+    }
+
+    for (int i = 0; i < OperationRetries; i++)
+    {
+      if (_debug)
+      {
+        System.out.println("Increasing counter key: " + key);
+      }
+
+      try
+      {
+        ColumnParent parent = new ColumnParent("counter_table");
+        ByteBuffer wrappedKey = ByteBuffer.wrap(new String("aaa").getBytes("UTF-8"));
+        CounterColumn col = new CounterColumn(ByteBuffer.wrap(new String("c").getBytes("UTF-8")),1);
+        client.add(wrappedKey, parent, col, writeConsistencyLevel);
+
         if (_debug)
         {
            System.out.println("ConsistencyLevel=" + writeConsistencyLevel.toString());

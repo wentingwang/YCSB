@@ -214,6 +214,19 @@ public class BasicDB extends DB
 		return 0;
 	}
 
+        public int increaseCounter(String table, String key)
+	{
+		delay();
+
+		if (verbose)
+		{
+			System.out.print("INCREASE COUNTER "+table+" "+key+" [ ");
+			System.out.println("]");
+		}
+
+		return 0;
+	}
+
 
 	/**
 	 * Delete a record from the database. 

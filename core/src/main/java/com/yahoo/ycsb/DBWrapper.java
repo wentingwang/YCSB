@@ -152,6 +152,16 @@ public class DBWrapper extends DB
 		return res;
 	}
 
+        public int increaseCounter(String table, String key)
+        {
+		long st=System.nanoTime();
+		int res=_db.increaseCounter(table,key);
+		long en=System.nanoTime();
+		_measurements.measure("COUNTER",(int)((en-st)/1000));
+		_measurements.reportReturnCode("COUNTER",res);
+		return res;
+	}
+
 	/**
 	 * Delete a record from the database. 
 	 *
