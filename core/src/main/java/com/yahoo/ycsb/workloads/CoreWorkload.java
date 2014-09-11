@@ -355,7 +355,6 @@ public class CoreWorkload extends Workload
 		operationchooser=new DiscreteGenerator();
 		if (readproportion>0)
 		{
-                        System.out.println("Find Read");
 			operationchooser.addValue(readproportion,"READ");
 		}
 
@@ -380,7 +379,6 @@ public class CoreWorkload extends Workload
 		}
                 if (increasecounterproportion>0)
 		{
-                        System.out.println("Find IncreaseCounter");
 			operationchooser.addValue(increasecounterproportion,"INCREASECOUNTER");
 		}
 

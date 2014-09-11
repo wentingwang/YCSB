@@ -29,6 +29,7 @@ import java.util.Vector;
 import java.util.Random;
 import java.util.Properties;
 import java.nio.ByteBuffer;
+import java.lang.Math;
 
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TFramedTransport;
@@ -51,6 +52,8 @@ public class CassandraClient10 extends DB
 
   public int ConnectionRetries;
   public int OperationRetries;
+  public int counterNum;
+  public int counterIncrement;
   public String column_family;
 
   public static final String CONNECTION_RETRY_PROPERTY = "cassandra.connectionretries";
@@ -76,6 +79,12 @@ public class CassandraClient10 extends DB
 
   public static final String DELETE_CONSISTENCY_LEVEL_PROPERTY = "cassandra.deleteconsistencylevel";
   public static final String DELETE_CONSISTENCY_LEVEL_PROPERTY_DEFAULT = "ONE";
+
+  public static final String COUNTER_PROPERTY = "cassandra.counternum";
+  public static final String COUNTER_PROPERTY_DEFAULT= "1";
+
+  public static final String COUNTER_INCREMENT_PROPERTY = "cassandra.counterincrement";
+  public static final String COUNTER_INCREMENT_PROPERTY_DEFAULT= "1"; 
 
 
   TTransport tr;
@@ -126,6 +135,8 @@ public class CassandraClient10 extends DB
     scanConsistencyLevel = ConsistencyLevel.valueOf(getProperties().getProperty(SCAN_CONSISTENCY_LEVEL_PROPERTY, SCAN_CONSISTENCY_LEVEL_PROPERTY_DEFAULT));
     deleteConsistencyLevel = ConsistencyLevel.valueOf(getProperties().getProperty(DELETE_CONSISTENCY_LEVEL_PROPERTY, DELETE_CONSISTENCY_LEVEL_PROPERTY_DEFAULT));
 
+    counterNum = Integer.parseInt(getProperties().getProperty(COUNTER_PROPERTY, COUNTER_PROPERTY_DEFAULT));
+    counterIncrement = Integer.parseInt(getProperties().getProperty(COUNTER_INCREMENT_PROPERTY, COUNTER_INCREMENT_PROPERTY_DEFAULT));
 
     _debug = Boolean.parseBoolean(getProperties().getProperty("debug", "false"));
 
@@ -522,6 +533,8 @@ public class CassandraClient10 extends DB
 
     for (int i = 0; i < OperationRetries; i++)
     {
+      key = String.valueOf((int)(Math.random() * counterNum));
+
       if (_debug)
       {
         System.out.println("Increasing counter key: " + key);
@@ -530,8 +543,8 @@ public class CassandraClient10 extends DB
       try
       {
         ColumnParent parent = new ColumnParent("counter_table");
-        ByteBuffer wrappedKey = ByteBuffer.wrap(new String("aaa").getBytes("UTF-8"));
-        CounterColumn col = new CounterColumn(ByteBuffer.wrap(new String("c").getBytes("UTF-8")),1);
+        ByteBuffer wrappedKey = ByteBuffer.wrap(key.getBytes("UTF-8"));
+        CounterColumn col = new CounterColumn(ByteBuffer.wrap(new String("c").getBytes("UTF-8")),counterIncrement);
         client.add(wrappedKey, parent, col, writeConsistencyLevel);
 
         if (_debug)
