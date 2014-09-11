@@ -8,15 +8,15 @@ Getting Started
 ---------------
 
 1. Download the latest release of YCSB:
-
-    git clone git://github.com/wentingwang/YCSB.git
-    cd YCSB
-    mvn clean package
+  
+   git clone git://github.com/wentingwang/YCSB.git  
+   cd YCSB  
+   mvn clean package
 
 2. Set up a cassandra database to benchmark. Use cassandra-cli to do these commands:
 
-   create keyspace usertable;
-   use usertable;
+   create keyspace usertable;  
+   use usertable;  
    create column family data;
    create column family counter_table with default_validation_class=CounterColumnType and replicate_on_write=true;
 
