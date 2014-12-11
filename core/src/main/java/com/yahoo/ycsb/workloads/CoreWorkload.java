@@ -267,6 +267,9 @@ public class CoreWorkload extends Workload
    * Default value of the percentage operations accessing the hot set.
    */
   public static final String HOTSPOT_OPN_FRACTION_DEFAULT = "0.8";
+
+  public static final String COUNTERTABLENAME_PROPERTY="countertable";
+  public static final String COUNTERTABLENAME_PROPERTY_DEFAULT="counter_table";
 	
 	IntegerGenerator keysequence;
 

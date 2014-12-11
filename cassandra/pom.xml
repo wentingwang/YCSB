@@ -22,9 +22,15 @@
        <artifactId>core</artifactId>
        <version>${project.version}</version>
      </dependency>
+     <dependency>
+       <groupId>com.datastax.cassandra</groupId>
+       <artifactId>cassandra-driver-core</artifactId>
+       <version>${cassandra.cql.version}</version>
+     </dependency>
   </dependencies>
   
   <build>
+   <pluginManagement>
     <plugins>
      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -46,6 +52,7 @@
         </executions>
       </plugin>
     </plugins>
+    </pluginManagement>
   </build>
 	
 </project>
